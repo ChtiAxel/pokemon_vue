@@ -14,7 +14,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U tcg_user -d tcg_database']
+      test: [ 'CMD-SHELL', 'pg_isready -U tcg_user -d tcg_database' ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -23,6 +23,16 @@ services:
     image: seyrinian/tcg-api:latest
     container_name: tcg_api
     restart: unless-stopped
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        echo "DATABASE_URL=$$DATABASE_URL" > /app/.env
+        echo "🔄 Running database migrations..."
+        npx prisma migrate deploy
+        echo "🌱 Seeding database (force)..."
+        npx tsx prisma/seed.ts || echo "⚠️  Seed failed or already seeded, continuing..."
+        echo "🚀 Starting API server..."
+        exec node dist/index.js
     ports:
       - '3001:3001'
     environment:
