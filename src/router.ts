@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { useAuthStore } from '@/stores/auth.store'
+
 import DeckCreatePage from './pages/DeckCreatePage.vue'
 import DeckDetailPage from './pages/DeckDetailPage.vue'
 import DeckEditPage from './pages/DeckEditPage.vue'
@@ -48,6 +50,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to) => {
+  const authStore = useAuthStore()
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    return ROUTES.SIGN_IN
+  }
+
+  if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    return ROUTES.HOME
+  }
+
+  return true
 })
 
 export default router
