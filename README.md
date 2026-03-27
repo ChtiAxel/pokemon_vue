@@ -169,10 +169,6 @@ Le workflow crée les **issues** du TP.
 
 Pour chaque ticket :
 
-### 0. Lire la charte graphique
-
-Consultez la charte graphique du projet avant de coder : [charte_graphique.md](./charte_graphique.md).
-
 ### 1. Récupérer l'issue
 
 Les issues GitHub contiennent l'objectif, les conseils et les exigences de chaque ticket.
