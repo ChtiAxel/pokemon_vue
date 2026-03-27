@@ -26,6 +26,14 @@ const request = async <T>(path: string, options: RequestInit = {}) => {
   const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
 
   if (!res.ok) {
+    if (res.status === 401 && !path.startsWith('/auth/')) {
+      storage.remove('token', 'user')
+
+      if (window.location.pathname !== '/sign-in') {
+        window.location.assign('/sign-in')
+      }
+    }
+
     const data = await res.json().catch(() => ({}))
     throw new Error(
       (data as { message?: string }).message || `Erreur ${res.status}`,
