@@ -1,16 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { useAuthStore } from '@/stores/auth.store'
-
 import DeckCreatePage from './pages/DeckCreatePage.vue'
 import DeckDetailPage from './pages/DeckDetailPage.vue'
 import DeckEditPage from './pages/DeckEditPage.vue'
+import GamePage from './pages/GamePage.vue'
 import HomePage from './pages/HomePage.vue'
 import SignInPage from './pages/SignInPage.vue'
 import SignUpPage from './pages/SignUpPage.vue'
+import { useAuthStore } from './stores/auth.store.js'
 
 export const ROUTES = {
   HOME: '/',
+  GAME: '/game',
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',
   DECK_CREATE: '/decks/new',
@@ -20,6 +21,7 @@ export const ROUTES = {
 
 const routes = [
   { path: ROUTES.HOME, component: HomePage, meta: { requiresAuth: true } },
+  { path: ROUTES.GAME, component: GamePage, meta: { requiresAuth: true } },
   {
     path: ROUTES.SIGN_IN,
     component: SignInPage,

@@ -45,9 +45,11 @@ import { useRouter } from 'vue-router'
 import PokemonCardGrid from '@/components/PokemonCardGrid.vue'
 import { useApi } from '@/composables/useApi'
 import { ROUTES } from '@/router'
+import { useAuthStore } from '@/stores/auth.store'
 import type { Card } from '@/types'
 
 const api = useApi()
+const authStore = useAuthStore()
 const message = useMessage()
 const router = useRouter()
 
@@ -90,6 +92,14 @@ const handleSubmit = async () => {
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : 'Impossible de créer le deck.'
+
+    if (errorMessage.toLowerCase().includes('failed to create deck')) {
+      authStore.signOut()
+      message.error('Session invalide. Reconnectez-vous puis réessayez.')
+      await router.push(ROUTES.SIGN_IN)
+      return
+    }
+
     message.error(errorMessage)
   } finally {
     isSubmitting.value = false
